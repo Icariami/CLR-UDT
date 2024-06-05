@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\AGH_UDT\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{209B12A3-EFC4-4108-91DF-9032A4E8A5A7}|AGH_UDT\\CLR_UDT.csproj|c:\\users\\gosia\\documents\\c#\\clr-udt\\agh_udt\\agh_udt\\bankaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{209B12A3-EFC4-4108-91DF-9032A4E8A5A7}|AGH_UDT\\CLR_UDT.csproj|solutionrelative:agh_udt\\bankaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BankAccount.cs",
+              "DocumentMoniker": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\AGH_UDT\\AGH_UDT\\BankAccount.cs",
+              "RelativeDocumentMoniker": "AGH_UDT\\BankAccount.cs",
+              "ToolTip": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\AGH_UDT\\AGH_UDT\\BankAccount.cs",
+              "RelativeToolTip": "AGH_UDT\\BankAccount.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-05T10:55:04.732Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

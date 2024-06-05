@@ -1,0 +1,13 @@
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.csproj.AssemblyReference.cache
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.AssemblyInfoInputs.cache
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.AssemblyInfo.cs
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.csproj.CoreCompileInputs.cache
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.sourcelink.json
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\bin\Debug\net8.0\CLR_UDT.deps.json
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\bin\Debug\net8.0\CLR_UDT.dll
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\bin\Debug\net8.0\CLR_UDT.pdb
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.dll
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\refint\CLR_UDT.dll
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\CLR_UDT.pdb
+C:\Users\gosia\Documents\C#\CLR-UDT\AGH_UDT\AGH_UDT\obj\Debug\net8.0\ref\CLR_UDT.dll
