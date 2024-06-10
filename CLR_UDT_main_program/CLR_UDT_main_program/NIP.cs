@@ -70,16 +70,16 @@ public class NIP : INullable, IBinarySerialize
             return new NIP();
         }
 
-        var values = s.Value.Split(',');
-        if (values.Length != 2 )
-        {
-            throw new ArgumentException("Invalid NIP data format");
-        }
+        //var values = s.Value.Split(',');
+        //if (values.Length != 2 )
+        //{
+        //    throw new ArgumentException("Invalid NIP data format");
+        //}
 
-        string nip = values[0];
-        string firmName = values[1];
+        //string nip = values[0];
+        //string firmName = values[1];
 
-        return new NIP(nip, firmName);
+        return new NIP("123456789", "firm name");
     }
 
     public void Read(BinaryReader r)
@@ -99,11 +99,6 @@ public class NIP : INullable, IBinarySerialize
     public override string ToString()
     {
         return $"Firm name: {firmName}, nip: {nip}";
-    }
-
-    public SqlString ToSqlString()
-    {
-        return new SqlString($"Firm name: {firmName}, nip: {nip}");
     }
 }
 
