@@ -22,8 +22,8 @@ public class Geolocation : INullable, IBinarySerialize
 
     public Geolocation(decimal latitude, decimal longitude)
     {
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.longitude = Math.Round(longitude, 6); ;
+        this.latitude = Math.Round(latitude, 6); ;
         this.isNull = false;
     }
 

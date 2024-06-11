@@ -8,7 +8,7 @@ using System.IO;
 
 
 [Serializable]
-[SqlUserDefinedType(Format.UserDefined, MaxByteSize = 85, ValidationMethodName = "Validate")]
+[SqlUserDefinedType(Format.UserDefined, MaxByteSize = 85)]
 public class IBANAccountNumber : INullable, IBinarySerialize
 {
     private string countryCode; // 2 letters, like pl
@@ -21,7 +21,7 @@ public class IBANAccountNumber : INullable, IBinarySerialize
 
     public IBANAccountNumber()
     {
-        isNull = true;
+        IsNull = true;
         accountHolderName = " ";
         countryCode = " ";
         checkDigits = " ";
@@ -37,7 +37,7 @@ public class IBANAccountNumber : INullable, IBinarySerialize
         this.bban = bban;
         this.accountHolderName = accountHolderName;
         this.balance = balance;
-        isNull = false;
+        IsNull = false;
     }
 
     public bool Validate()
@@ -92,49 +92,10 @@ public static IBANAccountNumber Parse(SqlString s)
     return new IBANAccountNumber("PL", "32", "12345678", "1234123412341234", "Gosia", 234.32M);
 }
 
-public string CountryCode
-    {
-        get;
-        set;
-    }
-
-    public string CheckDigits
-    {
-        get;
-        set;
-    }
-
-    public string BankSettlementNumber
-    {
-        get;
-        set;
-    }
-
-    public string Bban
-    {
-        get;
-        set;
-    }
-
-    public string AccountHolderName
-    {
-        get { return accountHolderName; }
-        set { accountHolderName = value; }
-    }
-
-    public decimal Balance
-    {
-        get { return balance; }
-        set { balance = value; }
-    }
-
-    public bool IsNull { get; private set; }
-
-
 
     public override string ToString()
     {
-        return $"{CountryCode} {checkDigits} {bankSettlementNumber} {bban}, Account Holder Name: {AccountHolderName}, Balance: {Balance}";
+        return $"{countryCode} {checkDigits} {bankSettlementNumber} {bban}, Account Holder Name: {accountHolderName}, Balance: {balance}";
     }
 
 
@@ -144,11 +105,13 @@ public string CountryCode
         {
             IBANAccountNumber h = new()
             {
-                isNull = true
+                IsNull = true
             };
             return h;
         }
     }
+
+    public bool IsNull { get => isNull; set => isNull = value; }
 
     public void Read(BinaryReader r)
     {

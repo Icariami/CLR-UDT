@@ -32,10 +32,13 @@ public class NipActions
                     nip = Console.ReadLine();
                 }
 
-                NIP nIP = new NIP(nip, firmName);
+                NIP nn = new NIP(nip, firmName);
                 string insertQuery = "INSERT INTO NIPs VALUES (@nip)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter nipParam = new SqlParameter("@nip", nip);
+                SqlParameter nipParam = new SqlParameter("@nip", nn)
+                {
+                    UdtTypeName = "[CLR_UDT].[dbo].[NIP]"
+                };
                 insertCommand.Parameters.Add(nipParam);
                 insertCommand.ExecuteNonQuery();
 
@@ -74,7 +77,7 @@ public class NipActions
                                 int id = reader.GetInt32(0);
                                 string nip = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, NIP: {nip}");
+                                Console.WriteLine($"ID: {id}, {nip}");
                             }
                         }
                         else

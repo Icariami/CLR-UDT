@@ -1,46 +1,64 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-public class GeolocationActions
+
+public class RGBAColorActions
 {
-    public static void InsertGeolocation()
+    public static void InsertRGBAColor()
     {
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
+
                 Console.WriteLine(@"Enter these fields:");
-                decimal latitude;
-                string latInput;
+                int r;
+                string rInput;
                 do
                 {
-                    Console.Write("Latitude (decimal number): ");
-                    latInput = Console.ReadLine();
-                } while (!decimal.TryParse(latInput, out latitude) || latitude < -90 || latitude > 90);
+                    Console.Write("R (int 0-255) : ");
+                    rInput = Console.ReadLine();
+                } while (!int.TryParse(rInput, out r) || r < 0 || r > 255);
 
-                decimal longitude;
-                string lonInput;
+                int g;
+                string gInput;
                 do
                 {
-                    Console.Write("Longitude (decimal number): ");
-                    lonInput = Console.ReadLine();
-                } while (!decimal.TryParse(lonInput, out longitude) || longitude < -180 || longitude > 180);
+                    Console.Write("G (int 0-255) : ");
+                    gInput = Console.ReadLine();
+                } while (!int.TryParse(gInput, out g) || g < 0 || g > 255);
 
-                Geolocation geolocation = new Geolocation(latitude, longitude);
-                string insertQuery = "INSERT INTO Geolocations VALUES (@geolocation)";
+                int b;
+                string bInput;
+                do
+                {
+                    Console.Write("B (int 0-255) : ");
+                    bInput = Console.ReadLine();
+                } while (!int.TryParse(bInput, out b) || b < 0 || b > 255);
+
+                decimal a;
+                string aInput;
+                do
+                {
+                    Console.Write("A (decimal 0,0 - 1,0) : ");
+                    aInput = Console.ReadLine();
+                } while (!decimal.TryParse(aInput, out a) || a < 0 || a > 1);
+
+
+                RGBAColor rgba = new RGBAColor(r, g, b, a);
+                string insertQuery = "INSERT INTO RGBAColors VALUES (@rgba)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter geoParam = new SqlParameter("@geolocation", geolocation)
-                { 
-                    UdtTypeName = "[CLR_UDT].[dbo].[Geolocation]"
+                SqlParameter rgbaParam = new SqlParameter("@rgba", rgba)
+                {
+                    UdtTypeName = "[CLR_UDT].[dbo].[RGBA]"
                 };
-                insertCommand.Parameters.Add(geoParam);
+                insertCommand.Parameters.Add(rgbaParam);
                 insertCommand.ExecuteNonQuery();
 
                 Console.WriteLine("Data inserted successfully!");
@@ -54,13 +72,13 @@ public class GeolocationActions
 
     }
 
-    public static void SelectGeolocation()
+    public static void SelectRGBAColor()
     {
         string sql = @"
         SELECT 
             ID,
-            geolocation.ToString() AS geolocation
-        FROM Geolocations;
+            color.ToString() AS RGBA_color
+        FROM RGBAColors;
     ";
         try
         {
@@ -76,9 +94,9 @@ public class GeolocationActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string geo = reader.GetString(1);
+                                string rgba = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, Geolocation: {geo}");
+                                Console.WriteLine($"ID: {id}, RGBA: {rgba}");
                             }
                         }
                         else
@@ -95,26 +113,25 @@ public class GeolocationActions
             Console.WriteLine(ex.Message);
         }
 
-        
-
     }
+
     public static void MainAction()
     {
-        int action;
+        int action2;
         do
         {
-            string userInput = Console.ReadLine();
-            if (int.TryParse(userInput, out action))
+            string userInput2 = Console.ReadLine();
+            if (int.TryParse(userInput2, out action2))
             {
-                if (action >= 1 && action <= 3)
+                if (action2 >= 1 && action2 <= 3)
                 {
-                    switch (action)
+                    switch (action2)
                     {
                         case 1:
-                            InsertGeolocation();
+                            InsertRGBAColor();
                             break;
                         case 2: // select data
-                            SelectGeolocation();
+                            SelectRGBAColor();
                             break;
                         case 3: // search data
                             break;
