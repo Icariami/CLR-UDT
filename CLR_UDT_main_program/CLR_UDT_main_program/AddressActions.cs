@@ -135,5 +135,40 @@ public class AddressActions
         }
 
     }
+
+    public static void MainAction()
+    {
+        int action3;
+        do
+        {
+            string userInput3 = Console.ReadLine();
+            if (int.TryParse(userInput3, out action3))
+            {
+                if (action3 >= 1 && action3 <= 3)
+                {
+                    switch (action3)
+                    {
+                        case 1:
+                            InsertAddress();
+                            break;
+                        case 2: // select data
+                            SelectAddresses();
+                            break;
+                        case 3: // search data
+                            break;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 3.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
+            }
+        } while (true);
+    }
 }
 

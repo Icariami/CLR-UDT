@@ -92,5 +92,40 @@ public class NipActions
         }
 
     }
+
+    public static void MainAction()
+    {
+        int action2;
+        do
+        {
+            string userInput2 = Console.ReadLine();
+            if (int.TryParse(userInput2, out action2))
+            {
+                if (action2 >= 1 && action2 <= 3)
+                {
+                    switch (action2)
+                    {
+                        case 1:
+                            InsertNIP();
+                            break;
+                        case 2: // select data
+                            SelectNIP();
+                            break;
+                        case 3: // search data
+                            break;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 3.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
+            }
+        } while (true);
+    }
 }
 

@@ -18,7 +18,7 @@ Choose table
 2 - NIP
 3 - Address
 4 - Phone Number
-5 -
+5 - Geolocation
 6 -
 
 ";
@@ -172,7 +172,8 @@ Choose table
                             } while (true);
                             break;
                         case 5:
-                            PrintOptions(" ");
+                            PrintOptions("Geolocation");
+                            GeolocationActions.MainAction();
                             break;
                         case 6:
                             PrintOptions(" ");

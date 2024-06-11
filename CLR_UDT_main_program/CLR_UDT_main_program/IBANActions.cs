@@ -152,4 +152,39 @@ public class IBANActions
         }
 
     }
+
+    public static void MainAction()
+    {
+        int action1;
+        do
+        {
+            string userInput1 = Console.ReadLine();
+            if (int.TryParse(userInput1, out action1))
+            {
+                if (action1 >= 1 && action1 <= 3)
+                {
+                    switch (action1)
+                    {
+                        case 1:
+                            InsertBankAccount();
+                            break;
+                        case 2: // select data
+                            SelectBankAccount();
+                            break;
+                        case 3: // search data
+                            break;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 3.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
+            }
+        } while (true);
+    }
 }

@@ -1,56 +1,43 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-public class PhoneNumberActions
+public class GeolocationActions
 {
-    public static bool ValidatePhoneNumber(string number)
-    {
-        return Regex.IsMatch(number, @"^\d{9}$");
-    }
-
-    public static bool ValidateAreaCode(string areaCode)
-    {
-        return Regex.IsMatch(areaCode, @"^\d{2}$");
-    }
-    public static void InsertPhoneNumber()
+    public static void InsertGeolocation()
     {
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
-
-                Console.Write("Area Code (2-digit number): ");
-                string areaCode = Console.ReadLine();
-                while (!ValidateAreaCode(areaCode))
+                Console.WriteLine(@"Enter these fields:");
+                decimal latitude;
+                string latInput;
+                do
                 {
-                    Console.Write("Invalid area code. Please enter it again: ");
-                    areaCode = Console.ReadLine();
-                }
+                    Console.Write("Latitude (decimal number): ");
+                    latInput = Console.ReadLine();
+                } while (!decimal.TryParse(latInput, out latitude));
 
-                Console.Write("Phone number (9-digit number) : ");
-                string number = Console.ReadLine();
-                while (!ValidatePhoneNumber(number))
+                decimal longitude;
+                string lonInput;
+                do
                 {
-                    Console.Write("Invalid phone number. Please enter it again: ");
-                    number = Console.ReadLine();
-                }
+                    Console.Write("Longitude (decimal number): ");
+                    lonInput = Console.ReadLine();
+                } while (!decimal.TryParse(lonInput, out longitude));
 
-                PhoneNumber phoneNumber = new PhoneNumber(areaCode, number);
-                string insertQuery = "INSERT INTO PhoneNumbers VALUES (@phoneNumber)";
+
+                Geolocation geolocation = new Geolocation(latitude, longitude);
+                string insertQuery = "INSERT INTO Geolocationss VALUES (@geolocation)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter phoneNumberParam = new SqlParameter("@phoneNumber", phoneNumber)
-                {
-                    SqlDbType = SqlDbType.Udt,
-                    UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]"
-                };
-                insertCommand.Parameters.Add(phoneNumberParam);
+                SqlParameter geoParam = new SqlParameter("@geolocation", geolocation) { UdtTypeName = "[CLR_UDT].[dbo].[Geolocation]" };
+                insertCommand.Parameters.Add(geoParam);
                 insertCommand.ExecuteNonQuery();
 
                 Console.WriteLine("Data inserted successfully!");
@@ -64,13 +51,13 @@ public class PhoneNumberActions
 
     }
 
-    public static void SelectPhoneNumbers()
+    public static void SelectGeolocation()
     {
         string sql = @"
         SELECT 
             ID,
-            phoneNumber.ToString() AS phone_number
-        FROM PhoneNumbers;
+            geolocation.ToString() AS geolocation
+        FROM Geolocations;
     ";
         try
         {
@@ -86,9 +73,9 @@ public class PhoneNumberActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string phoneNumber = reader.GetString(1);
+                                string geo = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, Phone number: {phoneNumber}");
+                                Console.WriteLine($"ID: {id}, Geolocation: {geo}");
                             }
                         }
                         else
@@ -105,25 +92,26 @@ public class PhoneNumberActions
             Console.WriteLine(ex.Message);
         }
 
-    }
+        
 
+    }
     public static void MainAction()
     {
-        int action4;
+        int action;
         do
         {
-            string userInput4 = Console.ReadLine();
-            if (int.TryParse(userInput4, out action4))
+            string userInput = Console.ReadLine();
+            if (int.TryParse(userInput, out action))
             {
-                if (action4 >= 1 && action4 <= 3)
+                if (action >= 1 && action <= 3)
                 {
-                    switch (action4)
+                    switch (action)
                     {
                         case 1:
-                            InsertPhoneNumber();
+                            InsertGeolocation();
                             break;
                         case 2: // select data
-                            SelectPhoneNumbers();
+                            SelectGeolocation();
                             break;
                         case 3: // search data
                             break;
