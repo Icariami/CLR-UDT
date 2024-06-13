@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CLR_UDT_main_program")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ad58278dbc99c98a721272e99305cf64135615c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b199ca2d0e078460b622d668d33f7ec1816a3589")]
 [assembly: System.Reflection.AssemblyProductAttribute("CLR_UDT_main_program")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CLR_UDT_main_program")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

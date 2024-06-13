@@ -11,7 +11,7 @@ public class NipActions
 
     public static bool ValidateNIP(string nip)
     {
-        return Regex.IsMatch(nip, @"^\d{9}$");
+        return Regex.IsMatch(nip, @"^\d{10}$");
     }
     public static void InsertNIP()
     {
@@ -134,6 +134,71 @@ public class NipActions
 
     public static void Reset()
     {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+
+                string dropTableQuery = "DROP TABLE IF EXISTS NIPs";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+
+                string createTableQuery = @"
+        
+                CREATE TABLE NIPs
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    nip [dbo].[NIP]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                NIP nip = new NIP("123456789", "Firma pierwsza");
+                string insertQuery = "INSERT INTO NIPs VALUES (@ni)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                nip = new NIP("987654321", "Firma druga");
+                insertQuery = "INSERT INTO NIPs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                nip = new NIP("6750001923", "AGH Krakow");
+                insertQuery = "INSERT INTO NIPs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                nip = new NIP("6750001923", "Cyfronet");
+                insertQuery = "INSERT INTO NIPs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                nip = new NIP("6342536789", "Firma trzecia");
+                insertQuery = "INSERT INTO NIPs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                Console.WriteLine("NIP numbers reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
 
     }
 }

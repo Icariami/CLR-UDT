@@ -20,7 +20,19 @@ public class AddressActions
         return Regex.IsMatch(name, @"^[A-Z][a-z]+$");
     }
 
-    
+    public static bool ValidateBuildingNumber(string buildingNumber)
+    {
+        // Check if empty string (representing -1) or a positive integer
+        return string.IsNullOrEmpty(buildingNumber) || int.TryParse(buildingNumber, out int num) && num > 0;
+    }
+
+    public static bool ValidateApartmentNumber(string apartmentNumber)
+    {
+        // Check if empty string (representing -1) or a positive integer or -1
+        return string.IsNullOrEmpty(apartmentNumber) || int.TryParse(apartmentNumber, out int num) && (num > 0 || num == -1);
+    }
+
+
 
     public static void InsertAddress()
     {
@@ -31,14 +43,28 @@ public class AddressActions
                 
 
                 Console.WriteLine("Enter these fields:");
+
+                Console.Write("Place name (enter \"-\" if there is none) : ");
+                string placeName = Console.ReadLine();
+
                 Console.Write("Street name : ");
                 string streetName = Console.ReadLine();
 
                 Console.Write("Building number : ");
                 string bnr = Console.ReadLine();
+                while (!ValidateBuildingNumber(bnr))
+                {
+                    Console.Write("Invalid building number. Please enter a positive number or leave empty for -1: ");
+                    bnr = Console.ReadLine();
+                }
 
                 Console.Write("Apartment number : ");
                 string anr = Console.ReadLine();
+                while (!ValidateApartmentNumber(anr))
+                {
+                    Console.Write("Invalid apartment number. Please enter a positive number, -1, or leave empty for -1: ");
+                    anr = Console.ReadLine();
+                }
 
                 Console.Write("Zip code : ");
                 string zipCode = Console.ReadLine();
@@ -47,10 +73,6 @@ public class AddressActions
                     Console.Write("Invalid zip code. Please enter it again: ");
                     zipCode = Console.ReadLine();
                 }
-
-
-                
-                
 
                 Console.Write("City : ");
                 string city = Console.ReadLine();
@@ -71,7 +93,7 @@ public class AddressActions
                
 
                 connection.Open();
-                Address address = new Address(streetName, bnr, anr, zipCode, city, country);
+                Address address = new Address(placeName, streetName, bnr, anr, zipCode, city, country);
                 string insertQuery = "INSERT INTO Addresses VALUES (@addres)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
                 SqlParameter addressParam = new SqlParameter("@addres", address)
@@ -101,6 +123,7 @@ public class AddressActions
             addres.ToString() AS address
         FROM Addresses;
     ";
+        Console.WriteLine("Adresses table:");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
@@ -117,7 +140,8 @@ public class AddressActions
                                 int id = reader.GetInt32(0);
                                 string address = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, Address: {address}");
+                                Console.WriteLine($"ID: {id}, {address}");
+                                Console.WriteLine();
                             }
                         }
                         else
@@ -173,7 +197,71 @@ public class AddressActions
 
     public static void Reset()
     {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
 
+                string dropTableQuery = "DROP TABLE IF EXISTS Addresses";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+
+                string createTableQuery = @"
+        
+                CREATE TABLE Addresses
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    addres [dbo].[Address]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                Address address = new Address("AGH Krakow", "Aleja Adama Mickiewicza", "30", "-1", "30-059", "Krakow", "Polska");
+                string insertQuery = "INSERT INTO Addresses VALUES (@ni)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                address = new Address("Dworzec w Warszawie", "Aleje Jerozolimskie", "144", "-1", "02-305", "Warszawa", "Polska");
+                insertQuery = "INSERT INTO Addresses VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                address = new Address("MDA Krakow", "Bosacka", "18", "-1", "31-505", "Krakow", "Polska");
+                insertQuery = "INSERT INTO Addresses VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                address = new Address("Dworzec PKP Katowice", "Wilhelma Szewczyka", "1", "-1", "40-098", "Katowice", "Polska");
+                insertQuery = "INSERT INTO Addresses VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                address = new Address("-","Malwowa", "15", "17", "30-611", "Krakow", "Polska");
+                insertQuery = "INSERT INTO Addresses VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                Console.WriteLine("Adresses reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
     }
 }
 

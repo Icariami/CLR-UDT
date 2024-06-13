@@ -112,15 +112,20 @@ public static IBANAccountNumber Parse(SqlString s)
     }
 
     public bool IsNull { get => isNull; set => isNull = value; }
+    //public string CountryCode { get => countryCode; set => countryCode = value; }
+    //public string CheckDigits { get => checkDigits; set => checkDigits = value; }
+    //public string BankSettlementNumber { get => bankSettlementNumber; set => bankSettlementNumber = value; }
+    //public string Bban { get => bban; set => bban = value; }
+    //public string AccountHolderName { get => accountHolderName; set => accountHolderName = value; }
+    //public decimal Balance { get => balance; set => balance = value; }
 
     public void Read(BinaryReader r)
     {
-        int nameLength = r.ReadInt32(); 
-        accountHolderName = new string(r.ReadChars(nameLength)); 
-        countryCode = new string(r.ReadChars(2)); 
-        checkDigits = new string(r.ReadChars(2)); 
-        bankSettlementNumber = new string(r.ReadChars(8)); 
-        bban = new string(r.ReadChars(16));
+        accountHolderName = r.ReadString();
+        countryCode = r.ReadString();
+        checkDigits = r.ReadString();
+        bankSettlementNumber = r.ReadString();
+        bban = r.ReadString();
         balance = r.ReadDecimal();
     }
 

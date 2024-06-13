@@ -1,7 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +17,8 @@ public class PhoneNumberActions
     {
         return Regex.IsMatch(areaCode, @"^\d{2}$");
     }
-    public static void InsertPhoneNumber()
+
+    public static void InsertNIP()
     {
         try
         {
@@ -43,14 +43,13 @@ public class PhoneNumberActions
                 }
 
                 PhoneNumber phoneNumber = new PhoneNumber(areaCode, number);
-                string insertQuery = "INSERT INTO PhoneNumbers VALUES (@phoneNumber)";
+                string insertQuery = "INSERT INTO PhoneNumbers VALUES (@nip)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter phoneNumberParam = new SqlParameter("@phoneNumber", phoneNumber)
+                SqlParameter nipParam = new SqlParameter("@nip", phoneNumber)
                 {
-                    SqlDbType = SqlDbType.Udt,
                     UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]"
                 };
-                insertCommand.Parameters.Add(phoneNumberParam);
+                insertCommand.Parameters.Add(nipParam);
                 insertCommand.ExecuteNonQuery();
 
                 Console.WriteLine("Data inserted successfully!");
@@ -59,17 +58,17 @@ public class PhoneNumberActions
         catch (SqlException ex)
         {
             Console.WriteLine("Error connecting to database:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Message); 
         }
 
     }
 
-    public static void SelectPhoneNumbers()
+    public static void SelectPhoneNumber()
     {
         string sql = @"
         SELECT 
             ID,
-            phoneNumber.ToString() AS phone_number
+            phoneNumber.ToString() 
         FROM PhoneNumbers;
     ";
         Console.WriteLine("Phone numbers table:");
@@ -87,9 +86,9 @@ public class PhoneNumberActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string phoneNumber = reader.GetString(1);
+                                string nip = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, Phone number: {phoneNumber}");
+                                Console.WriteLine($"ID: {id}, {nip}");
                             }
                         }
                         else
@@ -110,21 +109,21 @@ public class PhoneNumberActions
 
     public static void MainAction()
     {
-        int action4;
+        int action2;
         do
         {
-            string userInput4 = Console.ReadLine();
-            if (int.TryParse(userInput4, out action4))
+            string userInput2 = Console.ReadLine();
+            if (int.TryParse(userInput2, out action2))
             {
-                if (action4 >= 1 && action4 <= 3)
+                if (action2 >= 1 && action2 <= 3)
                 {
-                    switch (action4)
+                    switch (action2)
                     {
                         case 1:
-                            InsertPhoneNumber();
+                            InsertNIP();
                             break;
                         case 2: // select data
-                            SelectPhoneNumbers();
+                            SelectPhoneNumber();
                             break;
                         case 3: // search data
                             break;
@@ -145,6 +144,71 @@ public class PhoneNumberActions
 
     public static void Reset()
     {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+
+                string dropTableQuery = "DROP TABLE IF EXISTS PhoneNumbers";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+
+                string createTableQuery = @"
+        
+                CREATE TABLE PhoneNumbers
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    phoneNumber [dbo].[PhoneNumber]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                PhoneNumber phoneNumber = new PhoneNumber("48", "123456789");
+                string insertQuery = "INSERT INTO PhoneNumbers VALUES (@ni)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter niParam = new SqlParameter("@ni", phoneNumber) { UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                phoneNumber = new PhoneNumber("48", "634256789");
+                insertQuery = "INSERT INTO PhoneNumbers VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", phoneNumber) { UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                phoneNumber = new PhoneNumber("44", "909087654");
+                insertQuery = "INSERT INTO PhoneNumbers VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", phoneNumber) { UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                phoneNumber = new PhoneNumber("42", "423345267");
+                insertQuery = "INSERT INTO PhoneNumbers VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", phoneNumber) { UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                phoneNumber = new PhoneNumber("48", "900707121");
+                insertQuery = "INSERT INTO PhoneNumbers VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", phoneNumber) { UdtTypeName = "[CLR_UDT].[dbo].[PhoneNumber]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                Console.WriteLine("Phone numbers reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
 
     }
 }

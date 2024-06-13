@@ -10,6 +10,7 @@ using System.IO;
 [SqlUserDefinedType(Format.UserDefined, MaxByteSize = 200)]
 public class Address : INullable, IBinarySerialize
 {
+    private string placeName;
     private string street;
     private string buildingNumber;
     private string apartmentNumber;
@@ -23,8 +24,9 @@ public class Address : INullable, IBinarySerialize
         isNull = true;
     }
 
-    public Address(string street, string buildingNumber, string apartmentNumber, string zipCode, string city, string country)
+    public Address(string placeName, string street, string buildingNumber, string apartmentNumber, string zipCode, string city, string country)
     {
+        this.placeName = placeName;
         this.street = street;
         this.buildingNumber = buildingNumber;
         this.apartmentNumber = apartmentNumber;
@@ -77,12 +79,17 @@ public class Address : INullable, IBinarySerialize
         //string city = values[4];
         //string country = values[5];
 
-        return new Address("Krakowska", "12", "2", "12-432", "Krakow", "Polska");
+        return new Address("-", "Krakowska", "12", "2", "12-432", "Krakow", "Polska");
     }
 
     public override string ToString()
     {
-        string address = $"{street} {buildingNumber}";
+        string address = "";
+        if (placeName != "-")
+        {
+            address += placeName += "\n";
+        }
+        address += $"{street} {buildingNumber}";
         if(int.Parse(apartmentNumber) > 0)
         {
             address += $" / {apartmentNumber}";
@@ -101,6 +108,8 @@ public class Address : INullable, IBinarySerialize
         }
     }
 
+    public string PlaceName { get => placeName; private set => placeName = value; }
+
     public void Read(BinaryReader r)
     {
         //int streetLength = r.ReadInt32();
@@ -114,7 +123,7 @@ public class Address : INullable, IBinarySerialize
         //city = new string(r.ReadChars(cityLength));
         //int countryLength = r.ReadInt32();
         //country = new string(r.ReadChars(countryLength));
-
+        placeName = r.ReadString();
         street = r.ReadString();
         buildingNumber = r.ReadString();
         apartmentNumber = r.ReadString();
@@ -125,6 +134,7 @@ public class Address : INullable, IBinarySerialize
 
     public void Write(BinaryWriter w)
     {
+        w.Write(placeName);
         //w.Write(street.Length);
         w.Write(street);
         //w.Write(buildingNumber.Length);
