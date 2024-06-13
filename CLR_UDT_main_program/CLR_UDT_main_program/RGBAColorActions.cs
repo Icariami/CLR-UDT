@@ -6,10 +6,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-
 public class RGBAColorActions
 {
-    public static void InsertRGBAColor()
+    public static void InsertRGBA()
     {
         try
         {
@@ -50,15 +49,14 @@ public class RGBAColorActions
                     aInput = Console.ReadLine();
                 } while (!decimal.TryParse(aInput, out a) || a < 0 || a > 1);
 
-
-                RGBAColor rgba = new RGBAColor(r, g, b, a);
-                string insertQuery = "INSERT INTO RGBAColors VALUES (@color)";
+                RGBAColor rgba = new RGBAColor(r,g,b,a);
+                string insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter rgbaParam = new SqlParameter("@color", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
-                //{
-                //    UdtTypeName = "[CLR_UDT].[dbo].[RGBA]"
-                //};
-                insertCommand.Parameters.Add(rgbaParam);
+                SqlParameter nipParam = new SqlParameter("@ni", rgba)
+                {
+                    UdtTypeName = "[CLR_UDT].[dbo].[RGBA]"
+                };
+                insertCommand.Parameters.Add(nipParam);
                 insertCommand.ExecuteNonQuery();
 
                 Console.WriteLine("Data inserted successfully!");
@@ -67,19 +65,22 @@ public class RGBAColorActions
         catch (SqlException ex)
         {
             Console.WriteLine("Error connecting to database:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Message); 
         }
 
     }
 
-    public static void SelectRGBAColor()
+    public static void SelectRGBA()
     {
         string sql = @"
         SELECT 
             ID,
-            color.ToString() AS RGBA_color
-        FROM RGBAColors;
+            rgba.ToString() AS RGBA
+        FROM RGBAs;
     ";
+
+        Console.WriteLine("RGBA Colors table:");
+
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
@@ -94,9 +95,9 @@ public class RGBAColorActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string rgba = reader.GetString(1);
+                                string nip = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, RGBA: {rgba}");
+                                Console.WriteLine($"ID: {id}, {nip}");
                             }
                         }
                         else
@@ -128,12 +129,13 @@ public class RGBAColorActions
                     switch (action2)
                     {
                         case 1:
-                            InsertRGBAColor();
+                            InsertRGBA();
                             break;
                         case 2: // select data
-                            SelectRGBAColor();
+                            SelectRGBA();
                             break;
                         case 3: // search data
+                            Reset();
                             break;
                     }
                     break;
@@ -152,7 +154,71 @@ public class RGBAColorActions
 
     public static void Reset()
     {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
 
+                string dropTableQuery = "DROP TABLE IF EXISTS RGBAs";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+
+                string createTableQuery = @"
+        
+                CREATE TABLE RGBAs
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    rgba [dbo].[RGBA]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                RGBAColor rgba = new RGBAColor(1,2,3,0.1M);
+                string insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter niParam = new SqlParameter("@ni", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                rgba = new RGBAColor(65, 21, 252, 0.4M);
+                insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                rgba = new RGBAColor(43, 202, 184, 0.2M);
+                insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                rgba = new RGBAColor(222, 22, 22, 0.7M);
+                insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                rgba = new RGBAColor(123, 61, 2, 0.5M);
+                insertQuery = "INSERT INTO RGBAs VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                Console.WriteLine("RGBA Colors reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
     }
 }
 

@@ -72,6 +72,7 @@ public class PhoneNumberActions
             phoneNumber.ToString() AS phone_number
         FROM PhoneNumbers;
     ";
+        Console.WriteLine("Phone numbers table:");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))

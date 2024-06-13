@@ -64,6 +64,9 @@ public class GeolocationActions
             geolocation.ToString() AS geolocation
         FROM Geolocations;
     ";
+
+        Console.WriteLine("Geolocations table:");
+
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))

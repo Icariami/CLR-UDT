@@ -61,6 +61,7 @@ public class NipActions
             nip.ToString() AS nip
         FROM NIPs;
     ";
+        Console.WriteLine("NIP numbers table:");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))

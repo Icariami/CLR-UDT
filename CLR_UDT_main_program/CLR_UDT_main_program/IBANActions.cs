@@ -118,6 +118,7 @@ public class IBANActions
             iban.ToString() AS IBAN
         FROM BankAccounts;
     ";
+        Console.WriteLine("IBAN Bank Accounts table:");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
