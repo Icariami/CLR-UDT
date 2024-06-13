@@ -52,12 +52,12 @@ public class RGBAColorActions
 
 
                 RGBAColor rgba = new RGBAColor(r, g, b, a);
-                string insertQuery = "INSERT INTO RGBAColors VALUES (@rgba)";
+                string insertQuery = "INSERT INTO RGBAColors VALUES (@color)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter rgbaParam = new SqlParameter("@rgba", rgba)
-                {
-                    UdtTypeName = "[CLR_UDT].[dbo].[RGBA]"
-                };
+                SqlParameter rgbaParam = new SqlParameter("@color", rgba) { UdtTypeName = "[CLR_UDT].[dbo].[RGBA]" };
+                //{
+                //    UdtTypeName = "[CLR_UDT].[dbo].[RGBA]"
+                //};
                 insertCommand.Parameters.Add(rgbaParam);
                 insertCommand.ExecuteNonQuery();
 
@@ -148,6 +148,11 @@ public class RGBAColorActions
                 Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
             }
         } while (true);
+    }
+
+    public static void Reset()
+    {
+
     }
 }
 

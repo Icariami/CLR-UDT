@@ -170,5 +170,10 @@ public class AddressActions
             }
         } while (true);
     }
+
+    public static void Reset()
+    {
+
+    }
 }
 

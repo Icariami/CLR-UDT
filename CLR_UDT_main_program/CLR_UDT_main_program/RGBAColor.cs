@@ -9,7 +9,7 @@ using System.IO;
 
 
 [Serializable]
-[SqlUserDefinedType(Format.UserDefined, MaxByteSize = 85)]
+[SqlUserDefinedType(Format.UserDefined, MaxByteSize = 200)]
 public class RGBAColor : INullable, IBinarySerialize
 {
     private int r;
@@ -18,10 +18,10 @@ public class RGBAColor : INullable, IBinarySerialize
     private decimal a;
     private bool isNull;
 
-    public int R { get => r; set => r = value; }
-    public int G { get => g; set => g = value; }
-    public int B { get => b; set => b = value; }
-    public decimal A { get => a; set => a = value; }
+    //public int R { get => r; set => r = value; }
+    //public int G { get => g; set => g = value; }
+    //public int B { get => b; set => b = value; }
+    //public decimal A { get => a; set => a = value; }
     public bool IsNull { get => isNull; set => isNull = value; }
 
     public RGBAColor(int r, int g, int b, decimal a)
@@ -30,12 +30,12 @@ public class RGBAColor : INullable, IBinarySerialize
         this.g = g;
         this.b = b;
         this.a = a;
-        IsNull = false;
+        isNull = false;
     }
 
     public RGBAColor()
     {
-        IsNull = true;
+        isNull = true;
     }
 
     public static RGBAColor Parse(SqlString s)

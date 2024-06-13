@@ -6,76 +6,91 @@ using Microsoft.SqlServer.Server;
 using System.Text.RegularExpressions;
 using System.IO;
 
+
 [Serializable]
 [SqlUserDefinedType(Format.UserDefined, MaxByteSize = 85)]
 public class Geolocation : INullable, IBinarySerialize
 {
-    private decimal latitude; // N (0, 90) or S (-90, 0)
-    private decimal longitude; // E (0, 180), W (-180, -0)
-                               // 
+    private decimal v1;
+    private decimal v2;
     private bool isNull;
 
     public Geolocation()
     {
-        IsNull = true;
+        isNull = true;
     }
 
-    public Geolocation(decimal latitude, decimal longitude)
+    public Geolocation(decimal v1, decimal v2)
     {
-        this.longitude = Math.Round(longitude, 6); ;
-        this.latitude = Math.Round(latitude, 6); ;
-        this.isNull = false;
+        isNull = false;
+        this.v1 = v1;
+        this.v2 = v2;
     }
 
-    public decimal Longitude { get => longitude; set => longitude = value; }
-    public decimal Latitude { get => latitude; set => latitude = value; }
-    public bool IsNull { get => isNull; set => isNull = value; }
-
-    public static Geolocation Parse(SqlString s)
+    public bool IsNull
     {
-        if (s.IsNull)
-        {
-            return new Geolocation();
-        }
-
-        var values = s.Value.Split(':');
-
-        if (values.Length != 2)
-        {
-            throw new ArgumentException("Invalid Geolocation data format");
-        }
-
-        decimal latitude = decimal.Parse(values[0]);
-        decimal longitude = decimal.Parse(values[1]);
-        return new Geolocation(latitude, longitude);
+        get; private set;
     }
 
     public static Geolocation Null
     {
         get
         {
-            Geolocation g = new Geolocation();
-            return g;
+            Geolocation n = new Geolocation();
+            return n;
         }
     }
 
-    public override string ToString()
+    public decimal V1
     {
-        string longitudeIndicator = longitude >= 0 ? "E" : "W";
-        string latitudeIndicator = latitude >= 0 ? "N" : "S";
-        return $"({Math.Abs(latitude)} {latitudeIndicator}, {Math.Abs(longitude)} {longitudeIndicator})";
+        get => v1;
+        private set => v1 = value;
+    }
+
+
+    public bool Validate()
+    {
+      
+
+        return true;
+    }
+
+    public static Geolocation Parse(SqlString s)
+    {
+        if(s.IsNull)
+        {
+            return new Geolocation();
+        }
+
+        //var values = s.Value.Split(',');
+        //if (values.Length != 2 )
+        //{
+        //    throw new ArgumentException("Invalid NIP data format");
+        //}
+
+        //string nip = values[0];
+        //string firmName = values[1];
+
+        return new Geolocation(1M, 2M);
     }
 
     public void Read(BinaryReader r)
     {
-        longitude = r.ReadDecimal();
-        latitude = r.ReadDecimal();
+        v1 = r.ReadDecimal();
+        v2 = r.ReadDecimal();
     }
 
     public void Write(BinaryWriter w)
     {
-        w.Write(longitude);
-        w.Write(latitude);
+        w.Write(v1);
+        w.Write(v2);
+    }
+
+    public override string ToString()
+    {
+        string longitudeIndicator = v1 >= 0 ? "E" : "W";
+        string latitudeIndicator = v2 >= 0 ? "N" : "S";
+        return $"({Math.Abs(v1)} {latitudeIndicator}, {Math.Abs(v2)} {longitudeIndicator})";
     }
 }
 

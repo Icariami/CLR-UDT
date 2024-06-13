@@ -153,6 +153,42 @@ public class IBANActions
 
     }
 
+    public static void SearchData()
+    {
+        string choice = "Choose ";
+        int action1;
+        do
+        {
+            string userInput1 = Console.ReadLine();
+            if (int.TryParse(userInput1, out action1))
+            {
+                if (action1 >= 1 && action1 <= 3)
+                {
+                    switch (action1)
+                    {
+                        case 1:
+                            InsertBankAccount();
+                            break;
+                        case 2: // select data
+                            SelectBankAccount();
+                            break;
+                        case 3: // search data
+                            break;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 3.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
+            }
+        } while (true);
+    }
+
     public static void MainAction()
     {
         int action1;
@@ -186,5 +222,74 @@ public class IBANActions
                 Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
             }
         } while (true);
+    }
+
+    public static void Reset()
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+
+                string dropTableQuery = "DROP TABLE IF EXISTS BankAccounts";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+               
+                string createTableQuery = @"
+        
+                CREATE TABLE BankAccounts
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    iban [dbo].[IBANAccountNumber]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                IBANAccountNumber iban = new IBANAccountNumber("PL", "12", "52637487", "1287645367459876", "Jan Kowalski", 2764.76M);
+                string insertQuery = "INSERT INTO BankAccounts VALUES (@iban)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter ibanParam = new SqlParameter("@iban", iban) { UdtTypeName = "[CLR_UDT].[dbo].[IBANAccountNumber]" };
+                insertCommand.Parameters.Add(ibanParam);
+                insertCommand.ExecuteNonQuery();
+
+                iban = new IBANAccountNumber("PL", "12", "02546378", "9834567234568098", "Julia Nowak", 91876.12M);
+                insertQuery = "INSERT INTO BankAccounts VALUES (@iban)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                ibanParam = new SqlParameter("@iban", iban) { UdtTypeName = "[CLR_UDT].[dbo].[IBANAccountNumber]" };
+                insertCommand.Parameters.Add(ibanParam);
+                insertCommand.ExecuteNonQuery();
+
+                iban = new IBANAccountNumber("PL", "12", "73541234", "0192837465748392", "Stefan Nowy", 876.12M);
+                insertQuery = "INSERT INTO BankAccounts VALUES (@iban)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                ibanParam = new SqlParameter("@iban", iban) { UdtTypeName = "[CLR_UDT].[dbo].[IBANAccountNumber]" };
+                insertCommand.Parameters.Add(ibanParam);
+                insertCommand.ExecuteNonQuery();
+
+                iban = new IBANAccountNumber("PL", "12", "64758734", "3121089780523413", "Natalia Wisniewska", 12.42M);
+                insertQuery = "INSERT INTO BankAccounts VALUES (@iban)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                ibanParam = new SqlParameter("@iban", iban) { UdtTypeName = "[CLR_UDT].[dbo].[IBANAccountNumber]" };
+                insertCommand.Parameters.Add(ibanParam);
+                insertCommand.ExecuteNonQuery();
+
+                iban = new IBANAccountNumber("PL", "12", "64758734", "9384123000912345", "Jakub Czerwony", 162.52M);
+                insertQuery = "INSERT INTO BankAccounts VALUES (@iban)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                ibanParam = new SqlParameter("@iban", iban) { UdtTypeName = "[CLR_UDT].[dbo].[IBANAccountNumber]" };
+                insertCommand.Parameters.Add(ibanParam);
+                insertCommand.ExecuteNonQuery();
+
+                Console.WriteLine("Bank accounts reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
     }
 }

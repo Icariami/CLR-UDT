@@ -23,6 +23,7 @@ Choose table
 5 - Geolocation
 6 - RGBA Color
 
+7 - Reset database
 ";
         
         Console.WriteLine(introduction1);
@@ -36,7 +37,7 @@ Choose table
                 string userInput = Console.ReadLine();
                 if (int.TryParse(userInput, out table))
                 {
-                    if (table >= 1 && table <= 6)
+                    if (table >= 1 && table <= 7)
                     {
                         switch (table)
                         {
@@ -64,17 +65,20 @@ Choose table
                                 PrintOptions("RGBA Color");
                                 RGBAColorActions.MainAction();
                                 break;
+                            case 7:
+                                ResetDatabase();
+                                break;
                         }
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please choose a number from 1 to 6.");
+                        Console.WriteLine("Invalid input. Please choose a number from 1 to 7.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please choose a number from 1 to 6.");
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 7.");
                 }
             } while (true);
 
@@ -95,6 +99,16 @@ Choose table
         chooseOption += "3 - Search data in table\n";
         Console.WriteLine("\n" + tableName + " table");
         Console.WriteLine(chooseOption);     
+    }
+
+    public static void ResetDatabase()
+    {
+        IBANActions.Reset();
+        NipActions.Reset();
+        AddressActions.Reset();
+        PhoneNumberActions.Reset();
+        GeolocationActions.Reset();
+        RGBAColorActions.Reset();
     }
 }
 

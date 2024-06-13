@@ -1,10 +1,9 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 public class GeolocationActions
@@ -16,12 +15,15 @@ public class GeolocationActions
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
+
+              
+
                 Console.WriteLine(@"Enter these fields:");
                 decimal latitude;
                 string latInput;
                 do
                 {
-                    Console.Write("Latitude (decimal number): ");
+                    Console.Write("Latitude (decimal number from -90 to 90): ");
                     latInput = Console.ReadLine();
                 } while (!decimal.TryParse(latInput, out latitude) || latitude < -90 || latitude > 90);
 
@@ -29,18 +31,18 @@ public class GeolocationActions
                 string lonInput;
                 do
                 {
-                    Console.Write("Longitude (decimal number): ");
+                    Console.Write("Longitude (decimal number from -180 to 180): ");
                     lonInput = Console.ReadLine();
                 } while (!decimal.TryParse(lonInput, out longitude) || longitude < -180 || longitude > 180);
 
-                Geolocation geolocation = new Geolocation(latitude, longitude);
-                string insertQuery = "INSERT INTO Geolocations VALUES (@geolocation)";
+                Geolocation nn = new Geolocation(latitude, longitude);
+                string insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                SqlParameter geoParam = new SqlParameter("@geolocation", geolocation)
-                { 
-                    UdtTypeName = "[CLR_UDT].[dbo].[Geolocation]"
+                SqlParameter nipParam = new SqlParameter("@ni", nn)
+                {
+                    UdtTypeName = "[CLR_UDT].[dbo].[Geo]"
                 };
-                insertCommand.Parameters.Add(geoParam);
+                insertCommand.Parameters.Add(nipParam);
                 insertCommand.ExecuteNonQuery();
 
                 Console.WriteLine("Data inserted successfully!");
@@ -49,7 +51,7 @@ public class GeolocationActions
         catch (SqlException ex)
         {
             Console.WriteLine("Error connecting to database:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Message); 
         }
 
     }
@@ -76,9 +78,9 @@ public class GeolocationActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string geo = reader.GetString(1);
+                                string nip = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, Geolocation: {geo}");
+                                Console.WriteLine($"ID: {id}, {nip}");
                             }
                         }
                         else
@@ -95,20 +97,19 @@ public class GeolocationActions
             Console.WriteLine(ex.Message);
         }
 
-        
-
     }
+
     public static void MainAction()
     {
-        int action;
+        int action2;
         do
         {
-            string userInput = Console.ReadLine();
-            if (int.TryParse(userInput, out action))
+            string userInput2 = Console.ReadLine();
+            if (int.TryParse(userInput2, out action2))
             {
-                if (action >= 1 && action <= 3)
+                if (action2 >= 1 && action2 <= 3)
                 {
-                    switch (action)
+                    switch (action2)
                     {
                         case 1:
                             InsertGeolocation();
@@ -117,6 +118,7 @@ public class GeolocationActions
                             SelectGeolocation();
                             break;
                         case 3: // search data
+                            Reset();
                             break;
                     }
                     break;
@@ -131,6 +133,77 @@ public class GeolocationActions
                 Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
             }
         } while (true);
+    }
+
+    public static void Reset()
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+
+                string dropTableQuery = "DROP TABLE IF EXISTS Geolocations";
+                SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
+                dropCommand.ExecuteNonQuery();
+
+
+                string createTableQuery = @"
+        
+                CREATE TABLE Geolocations
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY,
+                    geolocation [dbo].[Geo]
+                );
+                ";
+                SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
+                createCommand.ExecuteNonQuery();
+
+                Geolocation ni = new Geolocation(67.324M, -21.23M);
+                string insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
+                SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+                SqlParameter niParam = new SqlParameter("@ni", ni) { UdtTypeName = "[CLR_UDT].[dbo].[Geo]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                ni = new Geolocation(-52.24M, -101.23M);
+                insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", ni) { UdtTypeName = "[CLR_UDT].[dbo].[Geo]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                ni = new Geolocation(94.123M, 12.123M);
+                insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", ni) { UdtTypeName = "[CLR_UDT].[dbo].[Geo]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                ni = new Geolocation(80.1M, 0.1233M);
+                insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", ni) { UdtTypeName = "[CLR_UDT].[dbo].[Geo]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+                ni = new Geolocation(45M, -111.15M);
+                insertQuery = "INSERT INTO Geolocations VALUES (@ni)";
+                insertCommand = new SqlCommand(insertQuery, connection);
+                niParam = new SqlParameter("@ni", ni) { UdtTypeName = "[CLR_UDT].[dbo].[Geo]" };
+                insertCommand.Parameters.Add(niParam);
+                insertCommand.ExecuteNonQuery();
+
+
+
+                Console.WriteLine("Geolocations reseted successfully!");
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message); // Display the error message for debugging
+        }
     }
 }
 

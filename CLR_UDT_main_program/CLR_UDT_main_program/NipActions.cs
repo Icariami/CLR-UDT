@@ -130,5 +130,10 @@ public class NipActions
             }
         } while (true);
     }
+
+    public static void Reset()
+    {
+
+    }
 }
 
