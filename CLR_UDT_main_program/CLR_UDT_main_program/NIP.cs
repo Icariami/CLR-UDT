@@ -28,11 +28,6 @@ public class NIP : INullable, IBinarySerialize
         this.firmName = firmName;
     }
 
-    public bool IsNull
-    {
-        get; private set;
-    }
-
     public static NIP Null
     {
         get
@@ -42,20 +37,14 @@ public class NIP : INullable, IBinarySerialize
         }
     }
 
-    public string Nip
-    {
-        get => nip;
-        private set => nip = value;
-    }
-
-    public string FirmName
-    {
-        get; set;
-    }
+    
+    public bool IsNull { get => isNull; set => isNull = value; }
+    public string Nip { get => nip; set => nip = value; }
+    public string FirmName { get => firmName; set => firmName = value; }
 
     public bool Validate()
     {
-        if (!Regex.IsMatch(nip, @"^\d{9}$"))
+        if (!Regex.IsMatch(nip, @"^\d{10}$"))
         {
             return false;
         }
@@ -70,30 +59,28 @@ public class NIP : INullable, IBinarySerialize
             return new NIP();
         }
 
-        //var values = s.Value.Split(',');
-        //if (values.Length != 2 )
-        //{
-        //    throw new ArgumentException("Invalid NIP data format");
-        //}
+        var values = s.Value.Split(',');
+        if (values.Length != 2)
+        {
+            throw new ArgumentException("Invalid NIP data format");
+        }
 
-        //string nip = values[0];
-        //string firmName = values[1];
+        string nip = values[0];
+        string firmName = values[1];
 
-        return new NIP("123456789", "firm name");
+        return new NIP(nip, firmName);
     }
 
     public void Read(BinaryReader r)
     {
-        int nameLength = r.ReadInt32();
-        firmName = new string(r.ReadChars(nameLength));
-        nip = new string(r.ReadChars(9));
+        firmName = r.ReadString();
+        nip = r.ReadString();
     }
 
     public void Write(BinaryWriter w)
     {
-        w.Write(firmName.Length);
-        w.Write(firmName.ToCharArray());
-        w.Write(nip.ToCharArray());
+        w.Write(firmName);
+        w.Write(nip);
     }
 
     public override string ToString()

@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -82,6 +83,8 @@ public class IBANActions
                     Console.Write("Invalid account holder name. Please enter it again: ");
                     accountHolderName = Console.ReadLine();
                 }
+                TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+                accountHolderName = ti.ToTitleCase(accountHolderName);
 
                 decimal a;
                 string aInput;
@@ -111,7 +114,6 @@ public class IBANActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message); 
         }
-
     }
 
     public static void SelectIBAN()
@@ -139,9 +141,9 @@ public class IBANActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string iban = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {iban}");
                             }
                         }
                         else
@@ -157,7 +159,6 @@ public class IBANActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void MainAction()
@@ -175,10 +176,10 @@ public class IBANActions
                         case 1:
                             InsertIBAN();
                             break;
-                        case 2: // select data
+                        case 2: 
                             SelectIBAN();
                             break;
-                        case 3: // search data
+                        case 3: 
                             Search();
                             break;
                     }
@@ -197,8 +198,7 @@ public class IBANActions
     }
 
     public static void Search()
-    {
-       
+    {    
         string sql = @"
         SELECT 
             ID,
@@ -223,9 +223,9 @@ public class IBANActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string iban = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {iban}");
                             }
                         }
                         else
@@ -241,7 +241,6 @@ public class IBANActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void Reset()
@@ -256,9 +255,7 @@ public class IBANActions
                 SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
                 dropCommand.ExecuteNonQuery();
 
-
-                string createTableQuery = @"
-        
+                string createTableQuery = @"        
                 CREATE TABLE BankAccounts
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY,

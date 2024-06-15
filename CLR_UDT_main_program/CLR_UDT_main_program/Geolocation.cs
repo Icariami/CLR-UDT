@@ -27,11 +27,6 @@ public class Geolocation : INullable, IBinarySerialize
         this.v2 = v2;
     }
 
-    public bool IsNull
-    {
-        get; private set;
-    }
-
     public static Geolocation Null
     {
         get
@@ -41,17 +36,15 @@ public class Geolocation : INullable, IBinarySerialize
         }
     }
 
-    public decimal V1
-    {
-        get => v1;
-        private set => v1 = value;
-    }
+    
     public decimal V2 { get => v2; set => v2 = value; }
+    public bool IsNull { get => isNull; set => isNull = value; }
+    public decimal V1 { get => v1; set => v1 = value; }
 
     public bool Validate()
     {
-      
-
+        if (v1 < -90 || v1 > 90) return false;
+        if (v2 < -180 || v2 > 180) return false;
         return true;
     }
 
@@ -62,16 +55,16 @@ public class Geolocation : INullable, IBinarySerialize
             return new Geolocation();
         }
 
-        //var values = s.Value.Split(',');
-        //if (values.Length != 2 )
-        //{
-        //    throw new ArgumentException("Invalid NIP data format");
-        //}
+        var values = s.Value.Split(',');
+        if (values.Length != 2)
+        {
+            throw new ArgumentException("Invalid Geolocation data format");
+        }
 
-        //string nip = values[0];
-        //string firmName = values[1];
+        decimal v1 = decimal.Parse(values[0]);
+        decimal v2 = decimal.Parse(values[1]);
 
-        return new Geolocation(1M, 2M);
+        return new Geolocation(v1, v2);
     }
 
     public void Read(BinaryReader r)

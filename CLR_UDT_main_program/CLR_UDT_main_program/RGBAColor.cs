@@ -25,15 +25,10 @@ public class RGBAColor : INullable, IBinarySerialize
     public RGBAColor(int r, int g, int b, decimal a)
     {
         this.r = r;
-        this.G = g;
-        this.B = b;
+        this.g = g;
+        this.b = b;
         this.a = a;
         isNull = false;
-    }
-
-    public bool IsNull
-    {
-        get; private set;
     }
 
     public static RGBAColor Null
@@ -45,19 +40,18 @@ public class RGBAColor : INullable, IBinarySerialize
         }
     }
 
-    public int R
-    {
-        get => r;
-        private set => r = value;
-    }
+    public int R { get => r; private set => r = value; }
     public decimal A { get => a; private set => a = value; }
     public int G { get => g; private set => g = value; }
     public int B { get => b; private set => b = value; }
+    public bool IsNull { get => isNull; set => isNull = value; }
 
     public bool Validate()
     {
-      
-
+        if (r < 0 || r > 255) return false;
+        if (g < 0 || g > 255) return false;
+        if (b < 0 || b > 255) return false;
+        if (a < 0 || a > 1) return false;
         return true;
     }
 
@@ -74,22 +68,22 @@ public class RGBAColor : INullable, IBinarySerialize
     public void Read(BinaryReader r)
     {
         this.r = r.ReadInt32();
-        G = r.ReadInt32();
-        B = r.ReadInt32();
+        g = r.ReadInt32();
+        b = r.ReadInt32();
         a = r.ReadDecimal();
     }
 
     public void Write(BinaryWriter w)
     {
         w.Write(r);
-        w.Write(G);
-        w.Write(B);
+        w.Write(g);
+        w.Write(b);
         w.Write(a);
     }
 
     public override string ToString()
     {
-        return $"({r}, {G}, {B}, {a})";
+        return $"({r}, {g}, {b}, {a})";
     }
 }
 

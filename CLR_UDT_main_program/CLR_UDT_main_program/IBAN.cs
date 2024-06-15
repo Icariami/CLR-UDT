@@ -6,7 +6,7 @@ using Microsoft.SqlServer.Server;
 using System.Text.RegularExpressions;
 using System.IO;
 
-// IBAN 
+
 [Serializable]
 [SqlUserDefinedType(Format.UserDefined, MaxByteSize = 85)]
 public class IBAN : INullable, IBinarySerialize
@@ -17,7 +17,6 @@ public class IBAN : INullable, IBinarySerialize
     private string bban; // 16-digit number
     private string accountHolderName;
     private decimal balance;
-
     private bool isNull;
 
     public IBAN()
@@ -29,16 +28,11 @@ public class IBAN : INullable, IBinarySerialize
     {
         this.countryCode = countryCode;
         this.balance = balance;
-        isNull = false;
         this.checkDigits = checkDigits;
         this.bankSettlementNumber = bankSettlementNumber;
         this.bban = bban;
         this.accountHolderName = accountHolderName;
-    }
-
-    public bool IsNull
-    {
-        get; private set;
+        isNull = false;
     }
 
     public static IBAN Null
@@ -57,11 +51,15 @@ public class IBAN : INullable, IBinarySerialize
     public string BankSettlementNumber { get => bankSettlementNumber; set => bankSettlementNumber = value; }
     public string Bban { get => bban; set => bban = value; }
     public string AccountHolderName { get => accountHolderName; set => accountHolderName = value; }
+    public bool IsNull { get => isNull; set => isNull = value; }
 
     public bool Validate()
     {
-      
-
+        if (!Regex.IsMatch(countryCode, @"^[A-Z]{2}$")) return false;       
+        if (!Regex.IsMatch(checkDigits, @"^\d{2}$")) return false;
+        if (!Regex.IsMatch(bankSettlementNumber, @"^\d{8}$")) return false;
+        if (!Regex.IsMatch(bban, @"^\d{16}$")) return false;
+        if (!Regex.IsMatch(accountHolderName, @"^[a-zA-Z '-]+$")) return false;
         return true;
     }
 
@@ -94,7 +92,6 @@ public class IBAN : INullable, IBinarySerialize
         w.Write(accountHolderName);
         w.Write(balance);
     }
-
     public override string ToString()
     {
         return $"{countryCode} {checkDigits} {bankSettlementNumber} {bban} {balance} {accountHolderName}";

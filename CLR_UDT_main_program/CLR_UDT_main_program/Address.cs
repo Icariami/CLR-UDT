@@ -36,14 +36,6 @@ public class Address : INullable, IBinarySerialize
         isNull = false;
     }
 
-    public string Street { get; set; }
-    public string BuildingNumber { get; set; }
-    public string ApartmentNumber { get; set; }
-    public string ZipCode { get; set; }
-    public string City { get; set; }
-    public string Country { get; set; }
-    public bool IsNull { get; set; }
-
     public bool Validate()
     {
         return true;
@@ -58,28 +50,20 @@ public class Address : INullable, IBinarySerialize
 
         var values = s.Value.Split(',');
 
-        // Validate here?
+        if (values.Length != 7)
+        {
+            throw new ArgumentException("Invalid Address data format");
+        }
 
-        //if (values.Length != 6)
-        //{
-        //    throw new ArgumentException("Invalid Address data format");
-        //}
+        string placeName = values[0];
+        string street = values[1];
+        string buildingNumber = values[2];
+        string apartmentNumber = values[3];     
+        string zipCode = values[4];
+        string city = values[5];
+        string country = values[6];
 
-        //string street = values[0];
-        //int buildingNumber = int.Parse(values[1]);
-        //int apartmentNumber;
-        //if (values[2] == "-")
-        //{
-        //    apartmentNumber = -1;
-        //} else
-        //{
-        //    apartmentNumber = int.Parse(values[2]);
-        //}
-        //string zipCode = values[3];
-        //string city = values[4];
-        //string country = values[5];
-
-        return new Address("-", "Krakowska", "12", "2", "12-432", "Krakow", "Polska");
+        return new Address(placeName, street, buildingNumber, apartmentNumber, zipCode, city, country);
     }
 
     public override string ToString()
@@ -104,27 +88,22 @@ public class Address : INullable, IBinarySerialize
     {
         get
         {
-            Address a = new Address();
-            
+            Address a = new Address();          
             return a;
         }
     }
 
     public string PlaceName { get => placeName; private set => placeName = value; }
+    public string Street { get => street; set => street = value; }
+    public string BuildingNumber { get => buildingNumber; set => buildingNumber = value; }
+    public string ApartmentNumber { get => apartmentNumber; set => apartmentNumber = value; }
+    public string ZipCode { get => zipCode; set => zipCode = value; }
+    public string City { get => city; set => city = value; }
+    public string Country { get => country; set => country = value; }
+    public bool IsNull { get => isNull; set => isNull = value; }
 
     public void Read(BinaryReader r)
     {
-        //int streetLength = r.ReadInt32();
-        //street = new string(r.ReadChars(streetLength));
-        //int bnrLength = r.ReadInt32();
-        //buildingNumber = new string(r.ReadChars(bnrLength));
-        //int anr = r.ReadInt32();
-        //apartmentNumber = new string(r.ReadChars(anr));
-        //zipCode = new string(r.ReadChars(6));
-        //int cityLength = r.ReadInt32();
-        //city = new string(r.ReadChars(cityLength));
-        //int countryLength = r.ReadInt32();
-        //country = new string(r.ReadChars(countryLength));
         placeName = r.ReadString();
         street = r.ReadString();
         buildingNumber = r.ReadString();
@@ -137,16 +116,11 @@ public class Address : INullable, IBinarySerialize
     public void Write(BinaryWriter w)
     {
         w.Write(placeName);
-        //w.Write(street.Length);
         w.Write(street);
-        //w.Write(buildingNumber.Length);
         w.Write(buildingNumber);
-        //w.Write(apartmentNumber.Length);
         w.Write(apartmentNumber);
         w.Write(zipCode);
-        //w.Write(city.Length);
         w.Write(city);
-        //w.Write(country.Length);
         w.Write(country);
     }
 }

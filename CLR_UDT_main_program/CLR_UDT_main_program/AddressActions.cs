@@ -6,71 +6,69 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Globalization;
 
 public class AddressActions
 {
-
     public static bool ValidateZipCode(string zipCode)
     {
         return Regex.IsMatch(zipCode, @"^\d{2}-\d{3}$");
-    }
-    
+    }   
     public static bool ValidateCityAndCountry(string name)
     {
-        return Regex.IsMatch(name, @"^[A-Z][a-z]+$");
+        return Regex.IsMatch(name, @"^[a-z]+$");
     }
-
     public static bool ValidateBuildingNumber(string buildingNumber)
     {
-        // Check if empty string (representing -1) or a positive integer
         return string.IsNullOrEmpty(buildingNumber) || int.TryParse(buildingNumber, out int num) && num > 0;
     }
-
     public static bool ValidateApartmentNumber(string apartmentNumber)
     {
-        // Check if empty string (representing -1) or a positive integer or -1
         return string.IsNullOrEmpty(apartmentNumber) || int.TryParse(apartmentNumber, out int num) && (num > 0 || num == -1);
     }
-
-
 
     public static void InsertAddress()
     {
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
-            {
-                
-
+            {                
                 Console.WriteLine("Enter these fields:");
 
                 Console.Write("Place name (enter \"-\" if there is none) : ");
                 string placeName = Console.ReadLine();
 
+                TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
                 Console.Write("Street name : ");
                 string streetName = Console.ReadLine();
+                while (!ValidateCityAndCountry(streetName))
+                {
+                    Console.Write("Invalid street name. Please enter a positive number: ");
+                    streetName = Console.ReadLine();
+                }
+                streetName = ti.ToTitleCase(streetName);
 
                 Console.Write("Building number : ");
                 string bnr = Console.ReadLine();
                 while (!ValidateBuildingNumber(bnr))
                 {
-                    Console.Write("Invalid building number. Please enter a positive number or leave empty for -1: ");
+                    Console.Write("Invalid building number. Please enter a positive number: ");
                     bnr = Console.ReadLine();
                 }
 
-                Console.Write("Apartment number : ");
+                Console.Write("Apartment number (enter -1, if there isn't one): ");
                 string anr = Console.ReadLine();
                 while (!ValidateApartmentNumber(anr))
                 {
-                    Console.Write("Invalid apartment number. Please enter a positive number, -1, or leave empty for -1: ");
+                    Console.Write("Invalid apartment number. Please enter a positive number, -1 if there isn't one: ");
                     anr = Console.ReadLine();
                 }
 
-                Console.Write("Zip code : ");
+                Console.Write("Zip code (format: dd-ddd) : ");
                 string zipCode = Console.ReadLine();
                 while (!ValidateZipCode(zipCode))
                 {
-                    Console.Write("Invalid zip code. Please enter it again: ");
+                    Console.Write("Invalid zip code. Please enter it again (format: dd-ddd) : ");
                     zipCode = Console.ReadLine();
                 }
 
@@ -81,6 +79,8 @@ public class AddressActions
                     Console.Write("Invalid city name. Please enter it again: ");
                     city = Console.ReadLine();
                 }
+                
+                city = ti.ToTitleCase(city);
 
                 Console.Write("Country : ");
                 string country = Console.ReadLine();
@@ -89,8 +89,7 @@ public class AddressActions
                     Console.Write("Invalid country name. Please enter it again: ");
                     country = Console.ReadLine();
                 }
-
-               
+                country = ti.ToTitleCase(country);             
 
                 connection.Open();
                 Address address = new Address(placeName, streetName, bnr, anr, zipCode, city, country);

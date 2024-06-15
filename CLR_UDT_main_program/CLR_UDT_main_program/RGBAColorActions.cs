@@ -67,7 +67,6 @@ public class RGBAColorActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message); 
         }
-
     }
 
     public static void SelectRGBA()
@@ -95,9 +94,9 @@ public class RGBAColorActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string rgba = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {rgba}");
                             }
                         }
                         else
@@ -113,12 +112,10 @@ public class RGBAColorActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void Search()
     {
-
         string sql = @"
         SELECT 
             ID,
@@ -160,7 +157,6 @@ public class RGBAColorActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void MainAction()
@@ -178,10 +174,10 @@ public class RGBAColorActions
                         case 1:
                             InsertRGBA();
                             break;
-                        case 2: // select data
+                        case 2: 
                             SelectRGBA();
                             break;
-                        case 3: // search data
+                        case 3: 
                             Search();
                             break;
                     }
@@ -211,9 +207,7 @@ public class RGBAColorActions
                 SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
                 dropCommand.ExecuteNonQuery();
 
-
-                string createTableQuery = @"
-        
+                string createTableQuery = @"        
                 CREATE TABLE RGBAs
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY,

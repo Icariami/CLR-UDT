@@ -16,8 +16,6 @@ public class GeolocationActions
             {
                 connection.Open();
 
-              
-
                 Console.WriteLine(@"Enter these fields:");
                 decimal latitude;
                 string latInput;
@@ -81,9 +79,9 @@ public class GeolocationActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string geo = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {geo}");
                             }
                         }
                         else
@@ -99,12 +97,10 @@ public class GeolocationActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void Search()
     {
-
         string sql = @"
         SELECT 
             ID,
@@ -128,9 +124,9 @@ public class GeolocationActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string geo = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {geo}");
                             }
                         }
                         else
@@ -146,28 +142,27 @@ public class GeolocationActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void MainAction()
     {
-        int action2;
+        int action;
         do
         {
-            string userInput2 = Console.ReadLine();
-            if (int.TryParse(userInput2, out action2))
+            string userInput = Console.ReadLine();
+            if (int.TryParse(userInput, out action))
             {
-                if (action2 >= 1 && action2 <= 3)
+                if (action >= 1 && action <= 3)
                 {
-                    switch (action2)
+                    switch (action)
                     {
                         case 1:
                             InsertGeolocation();
                             break;
-                        case 2: // select data
+                        case 2: 
                             SelectGeolocation();
                             break;
-                        case 3: // search data
+                        case 3: 
                             Search();
                             break;
                     }
@@ -197,9 +192,7 @@ public class GeolocationActions
                 SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
                 dropCommand.ExecuteNonQuery();
 
-
-                string createTableQuery = @"
-        
+                string createTableQuery = @"       
                 CREATE TABLE Geolocations
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY,
@@ -244,15 +237,13 @@ public class GeolocationActions
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-
-
                 Console.WriteLine("Geolocations reseted successfully!");
             }
         }
         catch (SqlException ex)
         {
             Console.WriteLine("Error connecting to database:");
-            Console.WriteLine(ex.Message); // Display the error message for debugging
+            Console.WriteLine(ex.Message);
         }
     }
 }

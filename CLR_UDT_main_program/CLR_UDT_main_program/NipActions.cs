@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 public class NipActions
 {
-
     public static bool ValidateNIP(string nip)
     {
         return Regex.IsMatch(nip, @"^\d{10}$");
@@ -50,7 +49,6 @@ public class NipActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message); 
         }
-
     }
 
     public static void SelectNIP()
@@ -60,7 +58,7 @@ public class NipActions
             ID,
             nip.ToString() AS nip
         FROM NIPs;
-    ";
+        ";
         Console.WriteLine("NIP numbers table:");
         try
         {
@@ -94,12 +92,10 @@ public class NipActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void Search()
     {
-
         string sql = @"
         SELECT 
             ID,
@@ -141,7 +137,6 @@ public class NipActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void MainAction()
@@ -159,10 +154,10 @@ public class NipActions
                         case 1:
                             InsertNIP();
                             break;
-                        case 2: // select data
+                        case 2: 
                             SelectNIP();
                             break;
-                        case 3: // search data
+                        case 3:
                             Search();
                             break;
                     }
@@ -182,6 +177,7 @@ public class NipActions
 
     public static void Reset()
     {
+        Console.WriteLine("inside reset NIP");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
@@ -192,9 +188,7 @@ public class NipActions
                 SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
                 dropCommand.ExecuteNonQuery();
 
-
-                string createTableQuery = @"
-        
+                string createTableQuery = @"       
                 CREATE TABLE NIPs
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY,
@@ -204,14 +198,14 @@ public class NipActions
                 SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
                 createCommand.ExecuteNonQuery();
 
-                NIP nip = new NIP("123456789", "Firma pierwsza");
+                NIP nip = new NIP("1234567890", "Firma pierwsza");
                 string insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
                 SqlParameter niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-                nip = new NIP("987654321", "Firma druga");
+                nip = new NIP("9876543210", "Firma druga");
                 insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
                 niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
@@ -225,14 +219,14 @@ public class NipActions
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-                nip = new NIP("6750001923", "Cyfronet");
+                nip = new NIP("7234512356", "Cyfronet");
                 insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
                 niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-                nip = new NIP("6342536789", "Firma trzecia");
+                nip = new NIP("1234567893", "Firma trzecia");
                 insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
                 niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
@@ -247,7 +241,6 @@ public class NipActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message); // Display the error message for debugging
         }
-
     }
 }
 

@@ -27,11 +27,6 @@ public class PhoneNumber : INullable, IBinarySerialize
         isNull = false;
     }
 
-    public bool IsNull
-    {
-        get; private set;
-    }
-
     public static PhoneNumber Null
     {
         get
@@ -43,10 +38,12 @@ public class PhoneNumber : INullable, IBinarySerialize
 
     public string AreaCode { get => areaCode; private set => areaCode = value; }
     public string Number { get => number; private set => number = value; }
+    public bool IsNull { get => isNull; set => isNull = value; }
 
     public bool Validate()
     {
-        
+        if (!Regex.IsMatch(number, @"^\d{9}$")) return false;
+        if (!Regex.IsMatch(areaCode, @"^\d{2}$")) return false;
         return true;
     }
 
@@ -57,16 +54,16 @@ public class PhoneNumber : INullable, IBinarySerialize
             return new PhoneNumber();
         }
 
-        //var values = s.Value.Split(',');
-        //if (values.Length != 2 )
-        //{
-        //    throw new ArgumentException("Invalid NIP data format");
-        //}
+        var values = s.Value.Split(',');
+        if (values.Length != 2)
+        {
+            throw new ArgumentException("Invalid PhoneNumber data format");
+        }
 
-        //string nip = values[0];
-        //string firmName = values[1];
+        string areaCode = values[0];
+        string number = values[1];
 
-        return new PhoneNumber("48", "123456789");
+        return new PhoneNumber(areaCode, number);
     }
 
     public void Read(BinaryReader r)

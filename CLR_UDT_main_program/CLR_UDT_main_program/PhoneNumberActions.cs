@@ -12,7 +12,6 @@ public class PhoneNumberActions
     {
         return Regex.IsMatch(number, @"^\d{9}$");
     }
-
     public static bool ValidateAreaCode(string areaCode)
     {
         return Regex.IsMatch(areaCode, @"^\d{2}$");
@@ -60,7 +59,6 @@ public class PhoneNumberActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message); 
         }
-
     }
 
     public static void SelectPhoneNumber()
@@ -70,7 +68,7 @@ public class PhoneNumberActions
             ID,
             phoneNumber.ToString() 
         FROM PhoneNumbers;
-    ";
+        ";
         Console.WriteLine("Phone numbers table:");
         try
         {
@@ -86,9 +84,9 @@ public class PhoneNumberActions
                             while (reader.Read())
                             {
                                 int id = reader.GetInt32(0);
-                                string nip = reader.GetString(1);
+                                string nums = reader.GetString(1);
 
-                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine($"ID: {id}, {nums}");
                             }
                         }
                         else
@@ -104,12 +102,10 @@ public class PhoneNumberActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void Search()
     {
-
         string sql = @"
         SELECT 
             ID,
@@ -151,7 +147,6 @@ public class PhoneNumberActions
             Console.WriteLine("Error connecting to database:");
             Console.WriteLine(ex.Message);
         }
-
     }
 
     public static void MainAction()
@@ -169,10 +164,10 @@ public class PhoneNumberActions
                         case 1:
                             InsertNIP();
                             break;
-                        case 2: // select data
+                        case 2: 
                             SelectPhoneNumber();
                             break;
-                        case 3: // search data
+                        case 3: 
                             Search();
                             break;
                     }
@@ -202,9 +197,7 @@ public class PhoneNumberActions
                 SqlCommand dropCommand = new SqlCommand(dropTableQuery, connection);
                 dropCommand.ExecuteNonQuery();
 
-
-                string createTableQuery = @"
-        
+                string createTableQuery = @"        
                 CREATE TABLE PhoneNumbers
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY,
@@ -255,9 +248,8 @@ public class PhoneNumberActions
         catch (SqlException ex)
         {
             Console.WriteLine("Error connecting to database:");
-            Console.WriteLine(ex.Message); // Display the error message for debugging
+            Console.WriteLine(ex.Message); 
         }
-
     }
 }
 
