@@ -102,6 +102,53 @@ public class GeolocationActions
 
     }
 
+    public static void Search()
+    {
+
+        string sql = @"
+        SELECT 
+            ID,
+            geolocation.ToString() AS geolocation
+        FROM Geolocations
+        WHERE geolocation.V1 > 0 AND geolocation.V2 < 0;
+        ";
+
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+                Console.WriteLine("Geolocations in the north-western hemisphere:");
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                string nip = reader.GetString(1);
+
+                                Console.WriteLine($"ID: {id}, {nip}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No records found for the provided table.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+
     public static void MainAction()
     {
         int action2;
@@ -121,7 +168,7 @@ public class GeolocationActions
                             SelectGeolocation();
                             break;
                         case 3: // search data
-                            Reset();
+                            Search();
                             break;
                     }
                     break;

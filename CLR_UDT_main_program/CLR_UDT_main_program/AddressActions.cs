@@ -179,6 +179,7 @@ public class AddressActions
                             SelectAddresses();
                             break;
                         case 3: // search data
+                            Search();
                             break;
                     }
                     break;
@@ -193,6 +194,54 @@ public class AddressActions
                 Console.WriteLine("Invalid input. Please enter a number from 1 to 3.");
             }
         } while (true);
+    }
+
+    public static void Search()
+    {
+
+        string sql = @"
+  SELECT 
+    ID,
+    addres.ToString() AS address
+  FROM Addresses
+  WHERE addres.PlaceName != '-';
+  ";
+
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+                Console.WriteLine("Addresses in Krakow, ordered by street name:");
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                string nip = reader.GetString(1);
+
+                                Console.WriteLine($"ID: {id}, {nip}");
+                                Console.WriteLine();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No records found for the provided table.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message);
+        }
+
     }
 
     public static void Reset()

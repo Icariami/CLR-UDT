@@ -46,7 +46,7 @@ public class Geolocation : INullable, IBinarySerialize
         get => v1;
         private set => v1 = value;
     }
-
+    public decimal V2 { get => v2; set => v2 = value; }
 
     public bool Validate()
     {
@@ -88,8 +88,8 @@ public class Geolocation : INullable, IBinarySerialize
 
     public override string ToString()
     {
-        string longitudeIndicator = v1 >= 0 ? "E" : "W";
-        string latitudeIndicator = v2 >= 0 ? "N" : "S";
+        string longitudeIndicator = v2 >= 0 ? "E" : "W";
+        string latitudeIndicator = v1 >= 0 ? "N" : "S";
         return $"({Math.Abs(v1)} {latitudeIndicator}, {Math.Abs(v2)} {longitudeIndicator})";
     }
 }

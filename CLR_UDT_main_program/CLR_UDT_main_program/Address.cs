@@ -87,8 +87,9 @@ public class Address : INullable, IBinarySerialize
         string address = "";
         if (placeName != "-")
         {
-            address += placeName += "\n";
+            address += placeName;
         }
+        address += "\n";
         address += $"{street} {buildingNumber}";
         if(int.Parse(apartmentNumber) > 0)
         {
@@ -104,6 +105,7 @@ public class Address : INullable, IBinarySerialize
         get
         {
             Address a = new Address();
+            
             return a;
         }
     }

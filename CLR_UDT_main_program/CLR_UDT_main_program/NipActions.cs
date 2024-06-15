@@ -97,6 +97,53 @@ public class NipActions
 
     }
 
+    public static void Search()
+    {
+
+        string sql = @"
+        SELECT 
+            ID,
+            nip.ToString() AS nip
+        FROM NIPs
+        ORDER BY nip.Nip;
+        ";
+
+        try
+        {
+            using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
+            {
+                connection.Open();
+                Console.WriteLine("NIP numbers in ascending order:");
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                string nip = reader.GetString(1);
+
+                                Console.WriteLine($"ID: {id}, {nip}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No records found for the provided table.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Error connecting to database:");
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+
     public static void MainAction()
     {
         int action2;
@@ -116,6 +163,7 @@ public class NipActions
                             SelectNIP();
                             break;
                         case 3: // search data
+                            Search();
                             break;
                     }
                     break;
