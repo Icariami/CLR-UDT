@@ -78,7 +78,7 @@ public class RGBAColorActions
         FROM RGBAs;
     ";
 
-        Console.WriteLine("RGBA Colors table:");
+        Console.WriteLine("RGBA Colors table (R, G, B, A) :");
 
         try
         {
@@ -129,7 +129,7 @@ public class RGBAColorActions
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
-                Console.WriteLine("Phone numbers from Poland: ");
+                Console.WriteLine("RGBA Colors (R, G, B, A) with A < 0.5: ");
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())

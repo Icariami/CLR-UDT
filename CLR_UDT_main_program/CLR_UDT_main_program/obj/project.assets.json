@@ -1702,11 +1702,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
+      "projectUniqueName": "C:\\Users\\gosia\\Documents\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
       "projectName": "CLR_UDT_main_program",
-      "projectPath": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
+      "projectPath": "C:\\Users\\gosia\\Documents\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
       "packagesPath": "C:\\Users\\gosia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\obj\\",
+      "outputPath": "C:\\Users\\gosia\\Documents\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

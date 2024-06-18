@@ -75,12 +75,14 @@ public class NIP : INullable, IBinarySerialize
     {
         firmName = r.ReadString();
         nip = r.ReadString();
+        isNull = r.ReadBoolean();
     }
 
     public void Write(BinaryWriter w)
     {
         w.Write(firmName);
         w.Write(nip);
+        w.Write(isNull);
     }
 
     public override string ToString()

@@ -203,7 +203,8 @@ public class AddressActions
     ID,
     addres.ToString() AS address
   FROM Addresses
-  WHERE addres.PlaceName != '-';
+  WHERE addres.City = 'Krakow'
+  ORDER BY addres.Street DESC;
   ";
 
         try
@@ -211,7 +212,7 @@ public class AddressActions
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
-                Console.WriteLine("Addresses in Krakow, ordered by street name:");
+                Console.WriteLine("Addresses in Krakow, ordered by street name in descending order:\n");
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -266,14 +267,14 @@ public class AddressActions
                 ";
                 SqlCommand createCommand = new SqlCommand(createTableQuery, connection);
                 createCommand.ExecuteNonQuery();
-
+   
                 Address address = new Address("AGH Krakow", "Aleja Adama Mickiewicza", "30", "-1", "30-059", "Krakow", "Polska");
                 string insertQuery = "INSERT INTO Addresses VALUES (@ni)";
                 SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
                 SqlParameter niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
-
+          
                 address = new Address("Dworzec w Warszawie", "Aleje Jerozolimskie", "144", "-1", "02-305", "Warszawa", "Polska");
                 insertQuery = "INSERT INTO Addresses VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
@@ -301,7 +302,7 @@ public class AddressActions
                 niParam = new SqlParameter("@ni", address) { UdtTypeName = "[CLR_UDT].[dbo].[Address]" };
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
-
+            
                 Console.WriteLine("Adresses reseted successfully!");
             }
         }

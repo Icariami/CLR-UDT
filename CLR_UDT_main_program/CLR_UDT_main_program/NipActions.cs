@@ -23,7 +23,7 @@ public class NipActions
                 Console.Write("Firm name: ");
                 string firmName = Console.ReadLine();
 
-                Console.Write("NIP: ");
+                Console.Write("NIP (10-digit number) : ");
                 string nip = Console.ReadLine();
                 while (!ValidateNIP(nip))
                 {
@@ -101,7 +101,7 @@ public class NipActions
             ID,
             nip.ToString() AS nip
         FROM NIPs
-        ORDER BY nip.Nip;
+        ORDER BY nip.Nip, nip.FirmName;
         ";
 
         try
@@ -109,7 +109,7 @@ public class NipActions
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
             {
                 connection.Open();
-                Console.WriteLine("NIP numbers in ascending order:");
+                Console.WriteLine("NIP numbers in ascending order (by nip number, and then by firm name) :");
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -177,7 +177,6 @@ public class NipActions
 
     public static void Reset()
     {
-        Console.WriteLine("inside reset NIP");
         try
         {
             using (SqlConnection connection = new SqlConnection("Server=(local);Database=CLR_UDT;Integrated Security=SSPI;TrustServerCertificate=True;"))
@@ -212,14 +211,14 @@ public class NipActions
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-                nip = new NIP("6750001923", "AGH Krakow");
+                nip = new NIP("6750001923", "Cyfronet");
                 insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
                 niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };
                 insertCommand.Parameters.Add(niParam);
                 insertCommand.ExecuteNonQuery();
 
-                nip = new NIP("7234512356", "Cyfronet");
+                nip = new NIP("6750001923", "AGH Krakow");
                 insertQuery = "INSERT INTO NIPs VALUES (@ni)";
                 insertCommand = new SqlCommand(insertQuery, connection);
                 niParam = new SqlParameter("@ni", nip) { UdtTypeName = "[CLR_UDT].[dbo].[NIP]" };

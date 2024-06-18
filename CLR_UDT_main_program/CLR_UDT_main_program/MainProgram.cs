@@ -52,6 +52,7 @@ Choose table
                             case 3:
                                 PrintOptions("Address");
                                 AddressActions.MainAction();
+                                //AdActions.Insert();
                                 break;
                             case 4:
                                 PrintOptions("Phone Number");

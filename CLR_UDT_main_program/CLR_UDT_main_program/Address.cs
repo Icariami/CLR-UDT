@@ -48,22 +48,23 @@ public class Address : INullable, IBinarySerialize
             return new Address();
         }
 
-        var values = s.Value.Split(',');
+        //var values = s.Value.Split(',');
 
-        if (values.Length != 7)
-        {
-            throw new ArgumentException("Invalid Address data format");
-        }
+        //if (values.Length != 7)
+        //{
+        //    throw new ArgumentException("Invalid Address data format");
+        //}
 
-        string placeName = values[0];
-        string street = values[1];
-        string buildingNumber = values[2];
-        string apartmentNumber = values[3];     
-        string zipCode = values[4];
-        string city = values[5];
-        string country = values[6];
+        //string placeName = values[0];
+        //string street = values[1];
+        //string buildingNumber = values[2];
+        //string apartmentNumber = values[3];     
+        //string zipCode = values[4];
+        //string city = values[5];
+        //string country = values[6];
 
-        return new Address(placeName, street, buildingNumber, apartmentNumber, zipCode, city, country);
+        //return new Address(placeName, street, buildingNumber, apartmentNumber, zipCode, city, country);
+        return new Address();
     }
 
     public override string ToString()
@@ -111,6 +112,7 @@ public class Address : INullable, IBinarySerialize
         zipCode = r.ReadString();
         city = r.ReadString();
         country = r.ReadString();
+        isNull = r.ReadBoolean();
     }
 
     public void Write(BinaryWriter w)
@@ -122,6 +124,7 @@ public class Address : INullable, IBinarySerialize
         w.Write(zipCode);
         w.Write(city);
         w.Write(country);
+        w.Write(isNull);
     }
 }
 

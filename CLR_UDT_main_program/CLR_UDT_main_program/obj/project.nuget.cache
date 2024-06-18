@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "q1lscC0Cgr6x4zuQVGW/VMKI6uF3t3dQXfKwuusTY9peBsRSDE6RNn0PCvYwpsG/gQq4Ty4wMYaNcSEzg8f5SQ==",
+  "dgSpecHash": "FbstipmWDFtkET4kWR4wK5cRVKJr6KtUsNi/CBiUXbara9hWcZdsae3MpNS8nCK6ifgWFWY44nHrNTp2AljLEw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\gosia\\Documents\\C#\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
+  "projectFilePath": "C:\\Users\\gosia\\Documents\\CLR-UDT\\CLR_UDT_main_program\\CLR_UDT_main_program\\CLR_UDT_main_program.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gosia\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\gosia\\.nuget\\packages\\azure.identity\\1.11.3\\azure.identity.1.11.3.nupkg.sha512",
